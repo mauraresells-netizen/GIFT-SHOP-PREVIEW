@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Thistle &amp; Trove — A Glasgow Gift Emporium</title>
-<meta name="description" content="Thistle & Trove — a curated West End gift emporium in Glasgow. Treasures, candles, Scottish-made keepsakes and bespoke hampers, gathered since 2011." />
+<title>Gift Shop — A Glasgow Gift Emporium</title>
+<meta name="description" content="Gift Shop — a curated West End gift emporium in Glasgow. Treasures, candles, Scottish-made keepsakes and bespoke hampers, gathered since 2011." />
 
 <!-- ============================================================
      GOOGLE FONTS  ·  Fraunces (display serif) + Karla (body)
@@ -40,19 +40,20 @@
    00 · DESIGN TOKENS
    ============================================================ */
 :root {
-  /* — Palette: warm artisan emporium, drawn from string-lit wood & brass — */
-  --cream:        #f6efe2;   /* warm paper background            */
-  --cream-deep:   #efe4d2;   /* panel / card background          */
-  --linen:        #fbf7ef;   /* lightest surface                 */
-  --terracotta:   #b5532c;   /* primary accent — warm rust       */
-  --terracotta-d: #8f3e1f;   /* deep rust for hovers             */
-  --brass:        #b78b46;   /* aged brass / gold                */
-  --brass-light:  #d8b878;   /* lit brass highlight              */
-  --forest:       #1f4a40;   /* deep Scottish teal-green         */
-  --forest-deep:  #16352e;   /* darkest green                    */
-  --plum:         #2a1a22;   /* near-black warm plum (text/dark) */
-  --ink:          #271c14;   /* primary text                     */
-  --ink-soft:     #5b4d3f;   /* secondary text                   */
+  /* — Palette: jewel-box boutique — porcelain, berry-rose, champagne &
+       aubergine. (Token names kept generic; values define the scheme.) — */
+  --cream:        #f4f0ec;   /* porcelain background             */
+  --cream-deep:   #e9e0dd;   /* soft mauve-grey panel            */
+  --linen:        #faf7f4;   /* lightest surface                 */
+  --terracotta:   #a23a57;   /* primary accent — deep berry rose */
+  --terracotta-d: #7e2a42;   /* deeper berry for hovers          */
+  --brass:        #b89150;   /* champagne gold                   */
+  --brass-light:  #ddbd80;   /* lit champagne highlight          */
+  --forest:       #3a2440;   /* secondary deep — aubergine       */
+  --forest-deep:  #271629;   /* darkest aubergine (dark section) */
+  --plum:         #1f1320;   /* near-black plum (footer/text)    */
+  --ink:          #2c2230;   /* primary text — plum ink          */
+  --ink-soft:     #645768;   /* secondary text                   */
 
   /* — Typography — */
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
@@ -173,12 +174,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-primary {
   background: var(--terracotta);
   color: var(--linen);
-  box-shadow: 0 10px 24px -12px rgba(143, 62, 31, 0.7);
+  box-shadow: 0 10px 24px -12px rgba(126, 42, 66, 0.7);
 }
 .btn-primary:hover {
   background: var(--terracotta-d);
   transform: translateY(-3px);
-  box-shadow: 0 18px 34px -14px rgba(143, 62, 31, 0.75);
+  box-shadow: 0 18px 34px -14px rgba(126, 42, 66, 0.75);
 }
 
 .btn-ghost {
@@ -250,12 +251,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
      warm gradient placeholder sits underneath in case it 404s.
      ============================================================ */
   background:
-    linear-gradient(180deg, rgba(20,12,8,0.30) 0%, rgba(20,12,8,0.55) 55%, rgba(15,9,6,0.82) 100%),
-    radial-gradient(120% 90% at 50% 25%, #6b4a2e 0%, #3a2616 55%, #20150c 100%);
+    linear-gradient(180deg, rgba(20,12,18,0.30) 0%, rgba(20,12,18,0.55) 55%, rgba(15,9,14,0.82) 100%),
+    radial-gradient(120% 90% at 50% 25%, #5a3a52 0%, #2e1c33 55%, #1a0f1c 100%);
   background-size: cover;
   background-position: center;
-  transition: clip-path 1.25s var(--ease-soft), opacity 0.9s ease 0.45s;
+  /* Cinematic exit: curtain-lift + gentle push-up + zoom, all eased together */
+  transition: clip-path 1.3s var(--ease-soft),
+              transform 1.3s var(--ease-soft),
+              opacity 0.6s ease 0.7s;
   clip-path: inset(0 0 0 0);
+  transform: translateY(0) scale(1);
+  will-change: clip-path, transform;
 }
 /* Real photo layer (so the gradient can stay as a graceful fallback) */
 #splash::before {
@@ -264,9 +270,47 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   inset: 0;
   background: url('splash.jpg') center/cover no-repeat;
   z-index: -1;
+  transition: transform 1.45s var(--ease-soft);
+  will-change: transform;
 }
-/* Curtain-wipe exit: clip away from the top down */
-#splash.exit { clip-path: inset(0 0 100% 0); }
+/* Curtain-wipe exit: lift the splash up, zoom the photo in, fade at the very end */
+#splash.exit {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(-3%) scale(1.04);
+}
+#splash.exit::before { transform: scale(1.16); }
+/* content lifts away first so it never lingers over the wipe */
+#splash.exit .splash-inner {
+  opacity: 0;
+  transform: translateY(-26px);
+  transition: opacity 0.4s ease, transform 0.6s var(--ease-soft);
+}
+
+/* Champagne light-sweep that flashes across the moment Enter is clicked */
+.splash-sweep {
+  position: absolute;
+  top: -12%; bottom: -12%;
+  left: 0;
+  width: 55%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-130%) skewX(-12deg);
+  background: linear-gradient(100deg,
+              transparent 0%,
+              rgba(221,189,128,0.0) 25%,
+              rgba(221,189,128,0.40) 50%,
+              rgba(221,189,128,0.0) 75%,
+              transparent 100%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+}
+#splash.exit .splash-sweep { animation: sweep 1.05s var(--ease-soft) forwards; }
+@keyframes sweep {
+  0%   { opacity: 0;   transform: translateX(-130%) skewX(-12deg); }
+  30%  { opacity: 0.95; }
+  100% { opacity: 0;   transform: translateX(170%)  skewX(-12deg); }
+}
 
 .splash-vignette {
   position: absolute;
@@ -370,7 +414,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-bottom: 1px solid transparent;
 }
 #nav.scrolled {
-  background: rgba(246, 239, 226, 0.82);
+  background: rgba(244, 240, 236, 0.82);
   backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid var(--hairline);
   padding-top: 1rem;
@@ -487,8 +531,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   padding: 8rem 0 5rem;
   overflow: hidden;
   background:
-    radial-gradient(80% 60% at 78% 18%, rgba(216,184,120,0.22), transparent 60%),
-    radial-gradient(70% 70% at 12% 88%, rgba(181,83,44,0.14), transparent 60%),
+    radial-gradient(80% 60% at 78% 18%, rgba(221,189,128,0.24), transparent 60%),
+    radial-gradient(70% 70% at 12% 88%, rgba(162,58,87,0.16), transparent 60%),
     var(--cream);
 }
 #hero .shape-1 { width: 440px; height: 440px; top: -90px; right: -70px; background: var(--brass-light); opacity: 0.32; }
@@ -552,8 +596,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   box-shadow: 0 40px 70px -36px rgba(39,28,20,0.5);
   /* IMAGE SWAP POINT — hero product still */
   background:
-    linear-gradient(150deg, rgba(31,74,64,0.25), rgba(181,83,44,0.2)),
-    repeating-linear-gradient(45deg, #e9d8bd 0 18px, #e3cfae 18px 36px),
+    linear-gradient(150deg, rgba(58,36,64,0.30), rgba(162,58,87,0.24)),
+    repeating-linear-gradient(45deg, #e7dcdd 0 18px, #ddccd0 18px 36px),
     var(--cream-deep);
   background-size: cover;
   background-position: center;
@@ -580,7 +624,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 0.92rem;
   line-height: 1.15;
   padding: 1rem;
-  box-shadow: 0 18px 40px -18px rgba(22,53,46,0.8);
+  box-shadow: 0 18px 40px -18px rgba(39,22,41,0.8);
   border: 1px solid var(--brass);
 }
 .hero-badge b { font-style: normal; font-size: 1.5rem; display: block; color: var(--brass-light); }
@@ -599,6 +643,48 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--terracotta); animation: scrollLine 2.2s ease-in-out infinite;
 }
 @keyframes scrollLine { 0% { top: -40px; } 60%,100% { top: 40px; } }
+
+/* Gentle continuous float for hero accents (independent of entrance) */
+.hero-frame { animation: floatY 7s ease-in-out infinite; }
+.hero-badge { animation: floatY 5.5s ease-in-out infinite; animation-delay: -2s; }
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* ============================================================
+   05b · MARQUEE BAND (announcement ribbon)
+   ============================================================ */
+.marquee {
+  background: var(--forest);
+  color: var(--cream);
+  overflow: hidden;
+  border-top: 1px solid rgba(221,189,128,0.25);
+  border-bottom: 1px solid rgba(221,189,128,0.25);
+  padding: 0.95rem 0;
+  position: relative;
+}
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee 32s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-track span {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  padding: 0 1.6rem;
+  color: var(--cream);
+}
+.marquee-track .sep { color: var(--brass-light); font-style: normal; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
 /* ============================================================
    06 · COLLECTIONS
@@ -627,7 +713,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .collection-card::before {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(120% 80% at 50% 0%, rgba(181,83,44,0.06), transparent 60%);
+  background: radial-gradient(120% 80% at 50% 0%, rgba(162,58,87,0.07), transparent 60%);
   opacity: 0; transition: opacity var(--t-med) ease;
 }
 .collection-card:hover {
@@ -678,8 +764,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   box-shadow: 0 36px 64px -34px rgba(39,28,20,0.5);
   /* IMAGE SWAP POINT — about / shopkeeper portrait */
   background:
-    linear-gradient(160deg, rgba(31,74,64,0.32), rgba(181,83,44,0.25)),
-    repeating-linear-gradient(135deg, #e7d4b6 0 20px, #ddc8a4 20px 40px),
+    linear-gradient(160deg, rgba(58,36,64,0.36), rgba(162,58,87,0.28)),
+    repeating-linear-gradient(135deg, #e6dadb 0 20px, #d8c6cb 20px 40px),
     var(--cream-deep);
   background-size: cover; background-position: center;
   clip-path: inset(0 0 100% 0);
@@ -695,8 +781,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--terracotta); color: var(--linen);
   font-family: var(--font-display); font-style: italic;
   padding: 0.7rem 1.2rem; border-radius: var(--radius);
-  box-shadow: 0 14px 30px -14px rgba(143,62,31,0.7);
+  box-shadow: 0 14px 30px -14px rgba(126,42,66,0.7);
   font-size: 1.05rem;
+  animation: floatY 7.5s ease-in-out infinite;
 }
 .about-copy .section-title { text-align: left; }
 .about-copy p { color: var(--ink-soft); margin-bottom: 1.2rem; font-size: 1.02rem; }
@@ -743,9 +830,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   will-change: transform;
   /* IMAGE SWAP POINT — full-width hamper / feature shot */
   background:
-    linear-gradient(180deg, rgba(22,53,46,0.78), rgba(20,12,8,0.82)),
-    radial-gradient(80% 120% at 30% 20%, rgba(181,83,44,0.5), transparent 55%),
-    repeating-linear-gradient(45deg, #2c3a30 0 28px, #243029 28px 56px),
+    linear-gradient(180deg, rgba(39,22,41,0.80), rgba(20,12,18,0.84)),
+    radial-gradient(80% 120% at 30% 20%, rgba(162,58,87,0.5), transparent 55%),
+    repeating-linear-gradient(45deg, #3a2440 0 28px, #2e1c33 28px 56px),
     var(--forest-deep);
   background-size: cover; background-position: center;
 }
@@ -803,13 +890,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .g-item:hover .g-img { transform: scale(1.07); }
 /* themed gradient placeholders — IMAGE SWAP POINTS */
-.g-1 { background: linear-gradient(150deg, #b5532c, #8f3e1f); }
-.g-2 { background: linear-gradient(150deg, #1f4a40, #16352e); }
-.g-3 { background: linear-gradient(150deg, #b78b46, #8a6630); }
-.g-4 { background: linear-gradient(150deg, #c98a5a, #9c5a34); }
-.g-5 { background: linear-gradient(150deg, #2a3a44, #1b2932); }
-.g-6 { background: linear-gradient(150deg, #d8b878, #ab8442); }
-.g-7 { background: linear-gradient(150deg, #6b4a2e, #3a2616); }
+.g-1 { background: linear-gradient(150deg, #a23a57, #7e2a42); }
+.g-2 { background: linear-gradient(150deg, #3a2440, #271629); }
+.g-3 { background: linear-gradient(150deg, #b89150, #8a6a34); }
+.g-4 { background: linear-gradient(150deg, #b56b82, #8a4a60); }
+.g-5 { background: linear-gradient(150deg, #3a2a48, #241a30); }
+.g-6 { background: linear-gradient(150deg, #ddbd80, #b08c46); }
+.g-7 { background: linear-gradient(150deg, #5a3a4e, #2e1c2e); }
 .g-item .g-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(180deg, transparent 40%, rgba(20,12,8,0.62));
@@ -965,7 +1052,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: none;
   margin-top: 1.2rem;
   padding: 0.9rem 1.1rem;
-  background: rgba(31,74,64,0.1);
+  background: rgba(58,36,64,0.1);
   border: 1px solid var(--forest);
   border-radius: var(--radius);
   color: var(--forest);
@@ -1009,7 +1096,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 2px solid var(--linen);
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  box-shadow: 0 8px 18px -6px rgba(143,62,31,0.7);
+  box-shadow: 0 8px 18px -6px rgba(126,42,66,0.7);
 }
 .map-pin .pin-pulse {
   position: absolute; left: 50%; top: 50%;
@@ -1152,9 +1239,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
      ============================================================ -->
 <div id="splash">
   <div class="splash-vignette"></div>
+  <div class="splash-sweep" aria-hidden="true"></div>
   <div class="splash-inner">
     <p class="splash-mark">Glasgow · West End · Est. 2011</p>
-    <h1 class="splash-title">Thistle <em>&amp;</em> Trove</h1>
+    <h1 class="splash-title">Gift <em>Shop</em></h1>
     <p class="splash-sub">A little emporium of considered gifts &amp; curious treasures.</p>
     <button class="splash-enter" id="enterBtn" aria-label="Enter the shop">
       Step Inside <span class="arrow">&rarr;</span>
@@ -1171,7 +1259,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
        04 · NAVIGATION
        ======================================================== -->
   <nav id="nav" aria-label="Primary">
-    <a href="#hero" class="nav-logo">Thistle <span class="amp">&amp;</span> Trove <span class="dot"></span></a>
+    <a href="#hero" class="nav-logo">Gift <span class="amp">Shop</span> <span class="dot"></span></a>
     <div class="nav-links">
       <a href="#collections">Collections</a>
       <a href="#about">Our Story</a>
@@ -1186,7 +1274,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
   <!-- Mobile slide-in panel -->
   <div class="mobile-panel" id="mobilePanel">
-    <p class="m-tag">Thistle &amp; Trove</p>
+    <p class="m-tag">Gift Shop</p>
     <a href="#collections">Collections</a>
     <a href="#about">Our Story</a>
     <a href="#gallery">Gallery</a>
@@ -1226,6 +1314,26 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <div class="hero-scroll"><span>Scroll</span><span class="line"></span></div>
   </header>
+
+  <!-- ========================================================
+       05b · MARQUEE BAND
+       Duplicated content = seamless -50% loop. Pauses on hover.
+       ======================================================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Free gift wrapping</span><span class="sep">✦</span>
+      <span>200+ local makers</span><span class="sep">✦</span>
+      <span>Same-day Glasgow hampers</span><span class="sep">✦</span>
+      <span>Cards finished free in-store</span><span class="sep">✦</span>
+      <span>Est. 2011 · West End</span><span class="sep">✦</span>
+      <!-- duplicate set for the seamless loop -->
+      <span>Free gift wrapping</span><span class="sep">✦</span>
+      <span>200+ local makers</span><span class="sep">✦</span>
+      <span>Same-day Glasgow hampers</span><span class="sep">✦</span>
+      <span>Cards finished free in-store</span><span class="sep">✦</span>
+      <span>Est. 2011 · West End</span><span class="sep">✦</span>
+    </div>
+  </div>
 
   <!-- ========================================================
        06 · COLLECTIONS
@@ -1299,13 +1407,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <div class="about-copy" data-reveal>
         <span class="eyebrow solo">Our Story</span>
         <h2 class="section-title">Gathered in <em>Glasgow</em>, with care.</h2>
-        <p>Thistle &amp; Trove began on a rainy afternoon in 2011, when Eilidh swapped a desk in the
+        <p>Our wee Gift Shop began on a rainy afternoon in 2011, when Eilidh swapped a desk in the
           city centre for a narrow shopfront on Cresswell Lane. The idea was simple: a shop where you
           could find a gift you'd be genuinely proud to give — nothing mass-made, nothing forgettable.</p>
         <p>Fourteen years on, we work with more than two hundred makers, most of them within a few miles
           of the front door. Every piece is chosen by hand, wrapped by hand, and sent off with a wee
           note if you'd like one. Come in out of the rain and have a look.</p>
-        <p class="about-sign">Eilidh &amp; the Trove team
+        <p class="about-sign">Eilidh &amp; the Gift Shop team
           <span>Keepers of the shop</span>
         </p>
 
@@ -1503,7 +1611,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
           <span class="pin-body"></span>
         </div>
         <div class="map-card">
-          <h4>Thistle &amp; Trove</h4>
+          <h4>Gift Shop</h4>
           <p>21 Cresswell Lane, Glasgow, G12 8AA</p>
           <p class="transport">↧ 3 min from Hillhead subway · steps from De Courcy's Arcade</p>
         </div>
@@ -1516,7 +1624,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
        ======================================================== -->
   <footer id="footer">
     <div class="wrap">
-      <div class="footer-wordmark">Thistle <em>&amp;</em> Trove</div>
+      <div class="footer-wordmark">Gift <em>Shop</em></div>
       <p class="footer-tag">Considered gifts, gathered in Glasgow.</p>
       <div class="footer-social">
         <a href="#">Instagram</a>
@@ -1546,7 +1654,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </div>
       </div>
 
-      <p class="footer-copy">© 2011–2026 Thistle &amp; Trove · Glasgow West End</p>
+      <p class="footer-copy">© 2011–2026 Gift Shop · Glasgow West End</p>
     </div>
   </footer>
 
