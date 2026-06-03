@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thistle &amp; Trove — A Glasgow Gift Emporium</title>
+<meta name="description" content="Thistle & Trove — a curated West End gift emporium in Glasgow. Treasures, candles, Scottish-made keepsakes and bespoke hampers, gathered since 2011." />
+
+<!-- ============================================================
+     GOOGLE FONTS  ·  Fraunces (display serif) + Karla (body)
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ================================================================
+   THISTLE & TROVE — Glasgow Gift Emporium
+   Single-file preview site. All CSS + JS embedded. Vanilla only.
+   ----------------------------------------------------------------
+   SECTION MAP
+   00  Design tokens (CSS custom properties)
+   01  Base / reset / typography
+   02  Grain overlay + decorative shapes
+   03  Splash / entry page
+   04  Navigation
+   05  Hero
+   06  Collections (core offering)
+   07  About / Our Story (+ count-up stats)
+   08  Spotlight (parallax feature)
+   09  Gallery (editorial masonry)
+   10  Testimonials (dark carousel)
+   11  Enquiry / Contact (floating-label form)
+   12  Find Us (map placeholder)
+   13  Footer
+   14  Reveal / animation utilities + responsive
+   ================================================================ */
+
+/* ============================================================
+   00 · DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* — Palette: warm artisan emporium, drawn from string-lit wood & brass — */
+  --cream:        #f6efe2;   /* warm paper background            */
+  --cream-deep:   #efe4d2;   /* panel / card background          */
+  --linen:        #fbf7ef;   /* lightest surface                 */
+  --terracotta:   #b5532c;   /* primary accent — warm rust       */
+  --terracotta-d: #8f3e1f;   /* deep rust for hovers             */
+  --brass:        #b78b46;   /* aged brass / gold                */
+  --brass-light:  #d8b878;   /* lit brass highlight              */
+  --forest:       #1f4a40;   /* deep Scottish teal-green         */
+  --forest-deep:  #16352e;   /* darkest green                    */
+  --plum:         #2a1a22;   /* near-black warm plum (text/dark) */
+  --ink:          #271c14;   /* primary text                     */
+  --ink-soft:     #5b4d3f;   /* secondary text                   */
+
+  /* — Typography — */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Karla', 'Helvetica Neue', sans-serif;
+
+  /* — Spacing scale — */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 7rem;
+  --space-2xl: 10rem;
+  --gutter: clamp(1.25rem, 5vw, 6rem);
+  --maxw: 1280px;
+
+  /* — Timing / easing — */
+  --ease-soft:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-hover: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --t-fast: 0.3s;
+  --t-med: 0.55s;
+  --t-slow: 0.85s;
+
+  /* — Misc — */
+  --radius: 3px;
+  --hairline: rgba(39, 28, 20, 0.14);
+}
+
+/* ============================================================
+   01 · BASE / RESET / TYPOGRAPHY
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+/* Scroll lock applied while splash is up */
+body.is-locked { overflow: hidden; height: 100vh; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+::selection { background: var(--terracotta); color: var(--linen); }
+
+/* Shared layout helpers */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.eyebrow::before, .eyebrow::after {
+  content: "";
+  width: 34px; height: 1px;
+  background: var(--brass);
+  opacity: 0.7;
+}
+.eyebrow.solo::after { display: none; }
+
+.section-title {
+  font-size: clamp(2.1rem, 4.6vw, 3.7rem);
+  margin: 1.1rem 0 1.1rem;
+  font-weight: 500;
+}
+.section-title em { font-style: italic; color: var(--terracotta); font-weight: 400; }
+
+.lede { color: var(--ink-soft); font-size: 1.06rem; max-width: 46ch; }
+
+/* — Buttons — */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2.1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform var(--t-med) var(--ease-hover),
+              background var(--t-fast) ease,
+              color var(--t-fast) ease,
+              box-shadow var(--t-med) var(--ease-hover);
+  will-change: transform;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--terracotta);
+  color: var(--linen);
+  box-shadow: 0 10px 24px -12px rgba(143, 62, 31, 0.7);
+}
+.btn-primary:hover {
+  background: var(--terracotta-d);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 34px -14px rgba(143, 62, 31, 0.75);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--brass);
+}
+.btn-ghost:hover {
+  background: var(--brass);
+  color: var(--linen);
+  transform: translateY(-3px);
+}
+
+/* Ripple element injected by JS */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  animation: ripple 0.7s var(--ease-soft);
+}
+@keyframes ripple { to { transform: scale(2.6); opacity: 0; } }
+
+/* ============================================================
+   02 · GRAIN OVERLAY + DECORATIVE SHAPES
+   ============================================================ */
+/* Permanent tactile film grain over the whole page */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Slow-drifting decorative blobs (used in hero + sections) */
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.5;
+  pointer-events: none;
+  will-change: transform;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(36px, -42px) scale(1.14); }
+}
+
+/* ============================================================
+   03 · SPLASH / ENTRY PAGE
+   ============================================================ */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* ============================================================
+     SPLASH IMAGE SWAP POINT
+     Drop the supplied storefront photo here. Niche-appropriate
+     warm gradient placeholder sits underneath in case it 404s.
+     ============================================================ */
+  background:
+    linear-gradient(180deg, rgba(20,12,8,0.30) 0%, rgba(20,12,8,0.55) 55%, rgba(15,9,6,0.82) 100%),
+    radial-gradient(120% 90% at 50% 25%, #6b4a2e 0%, #3a2616 55%, #20150c 100%);
+  background-size: cover;
+  background-position: center;
+  transition: clip-path 1.25s var(--ease-soft), opacity 0.9s ease 0.45s;
+  clip-path: inset(0 0 0 0);
+}
+/* Real photo layer (so the gradient can stay as a graceful fallback) */
+#splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('splash.jpg') center/cover no-repeat;
+  z-index: -1;
+}
+/* Curtain-wipe exit: clip away from the top down */
+#splash.exit { clip-path: inset(0 0 100% 0); }
+
+.splash-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(110% 80% at 50% 42%, transparent 42%, rgba(15,9,6,0.55) 100%),
+    linear-gradient(180deg, rgba(20,12,8,0.35), rgba(20,12,8,0.6));
+  pointer-events: none;
+}
+
+.splash-inner {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.5rem;
+  max-width: 760px;
+}
+.splash-mark {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  opacity: 0;
+  animation: splashUp 1.2s var(--ease-soft) 0.3s forwards;
+}
+.splash-title {
+  font-size: clamp(3.2rem, 10vw, 7rem);
+  color: var(--linen);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin: 1.1rem 0 0.4rem;
+  line-height: 1;
+  opacity: 0;
+  animation: splashUp 1.5s var(--ease-soft) 0.6s forwards;
+}
+.splash-title em { font-style: italic; color: var(--brass-light); }
+.splash-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+  color: rgba(246, 239, 226, 0.86);
+  margin-bottom: 2.6rem;
+  opacity: 0;
+  animation: splashUp 1.5s var(--ease-soft) 1s forwards;
+}
+@keyframes splashUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-enter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.05rem 2.8rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--linen);
+  border: 1.5px solid rgba(216, 184, 120, 0.7);
+  border-radius: var(--radius);
+  background: rgba(20, 12, 8, 0.18);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: splashUp 1.4s var(--ease-soft) 1.35s forwards,
+             breathe 3.4s ease-in-out 2.6s infinite;
+  transition: background var(--t-fast) ease, color var(--t-fast) ease,
+              border-color var(--t-fast) ease, transform var(--t-med) var(--ease-hover);
+  overflow: hidden;
+}
+.splash-enter:hover {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--plum);
+  transform: translateY(-2px);
+}
+.splash-enter .arrow { transition: transform var(--t-med) var(--ease-hover); }
+.splash-enter:hover .arrow { transform: translateX(5px); }
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(216,184,120,0); }
+  50%      { box-shadow: 0 0 34px 2px rgba(216,184,120,0.45); }
+}
+
+/* ============================================================
+   04 · NAVIGATION
+   ============================================================ */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem var(--gutter);
+  transition: background var(--t-med) ease, backdrop-filter var(--t-med) ease,
+              border-color var(--t-med) ease, padding var(--t-med) ease;
+  border-bottom: 1px solid transparent;
+}
+#nav.scrolled {
+  background: rgba(246, 239, 226, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--hairline);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.42rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.nav-logo .amp { color: var(--terracotta); font-style: italic; }
+.nav-logo .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--brass); display: inline-block;
+}
+.nav-links { display: flex; align-items: center; gap: 2.1rem; }
+.nav-links a {
+  position: relative;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.3rem 0;
+  transition: color var(--t-fast) ease;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 1.5px;
+  background: var(--terracotta);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--t-med) var(--ease-hover);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links .nav-cta {
+  padding: 0.6rem 1.3rem;
+  background: var(--forest);
+  color: var(--linen);
+  border-radius: var(--radius);
+  transition: background var(--t-fast) ease, transform var(--t-med) var(--ease-hover);
+}
+.nav-links .nav-cta::after { display: none; }
+.nav-links .nav-cta:hover { background: var(--forest-deep); color: var(--linen); transform: translateY(-2px); }
+
+/* Hamburger */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 30px;
+  z-index: 4100;
+}
+.nav-burger span {
+  height: 2px; width: 100%;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform var(--t-med) var(--ease-hover), opacity var(--t-fast) ease;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile slide-in panel */
+.mobile-panel {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(82vw, 360px);
+  background: var(--forest);
+  z-index: 4050;
+  transform: translateX(100%);
+  transition: transform var(--t-slow) var(--ease-soft);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 2rem 2.4rem;
+}
+.mobile-panel.open { transform: translateX(0); }
+.mobile-panel a {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  color: var(--cream);
+  padding: 0.5rem 0;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity var(--t-med) var(--ease-soft), transform var(--t-med) var(--ease-soft), color var(--t-fast) ease;
+}
+.mobile-panel a:hover { color: var(--brass-light); }
+.mobile-panel.open a { opacity: 1; transform: translateX(0); }
+.mobile-panel .m-tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--brass-light); margin-bottom: 1.4rem;
+}
+
+/* ============================================================
+   05 · HERO
+   ============================================================ */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 8rem 0 5rem;
+  overflow: hidden;
+  background:
+    radial-gradient(80% 60% at 78% 18%, rgba(216,184,120,0.22), transparent 60%),
+    radial-gradient(70% 70% at 12% 88%, rgba(181,83,44,0.14), transparent 60%),
+    var(--cream);
+}
+#hero .shape-1 { width: 440px; height: 440px; top: -90px; right: -70px; background: var(--brass-light); opacity: 0.32; }
+#hero .shape-2 { width: 360px; height: 360px; bottom: -120px; left: -90px; background: var(--terracotta); opacity: 0.16; animation-delay: -6s; }
+#hero .shape-3 { width: 240px; height: 240px; top: 40%; left: 52%; background: var(--forest); opacity: 0.12; animation-delay: -12s; }
+
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+  width: 100%;
+}
+.hero-copy { max-width: 38ch; }
+.hero-headline {
+  font-size: clamp(2.9rem, 7vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+  margin: 1.6rem 0 1.4rem;
+}
+.hero-headline em { font-style: italic; color: var(--terracotta); }
+/* word-by-word clip reveal */
+.reveal-word { display: inline-block; overflow: hidden; vertical-align: top; }
+.reveal-word > span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 0.75s var(--ease-soft);
+}
+.hero-ready .reveal-word > span { transform: translateY(0); }
+
+.hero-tag {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  margin-bottom: 2.2rem;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s var(--ease-soft);
+}
+.hero-ready .hero-tag { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
+.hero-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s var(--ease-soft);
+}
+.hero-ready .hero-actions { opacity: 1; transform: translateY(0); transition-delay: 1.05s; }
+
+/* Hero visual — stacked framed image with brass border */
+.hero-visual {
+  position: relative;
+  opacity: 0; transform: translateY(28px) scale(0.98);
+  transition: opacity 1.1s ease 0.5s, transform 1.1s var(--ease-soft) 0.5s;
+}
+.hero-ready .hero-visual { opacity: 1; transform: translateY(0) scale(1); }
+.hero-frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 40px 70px -36px rgba(39,28,20,0.5);
+  /* IMAGE SWAP POINT — hero product still */
+  background:
+    linear-gradient(150deg, rgba(31,74,64,0.25), rgba(181,83,44,0.2)),
+    repeating-linear-gradient(45deg, #e9d8bd 0 18px, #e3cfae 18px 36px),
+    var(--cream-deep);
+  background-size: cover;
+  background-position: center;
+}
+.hero-frame::after {
+  content: "";
+  position: absolute; inset: 14px;
+  border: 1.5px solid rgba(251, 247, 239, 0.55);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.hero-badge {
+  position: absolute;
+  bottom: -22px; left: -22px;
+  width: 116px; height: 116px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: var(--cream);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  padding: 1rem;
+  box-shadow: 0 18px 40px -18px rgba(22,53,46,0.8);
+  border: 1px solid var(--brass);
+}
+.hero-badge b { font-style: normal; font-size: 1.5rem; display: block; color: var(--brass-light); }
+.hero-scroll {
+  position: absolute;
+  bottom: 2.2rem; left: 50%; transform: translateX(-50%);
+  font-size: 0.66rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  opacity: 0; transition: opacity 1s ease 1.6s;
+}
+.hero-ready .hero-scroll { opacity: 0.8; }
+.hero-scroll .line { width: 1px; height: 40px; background: var(--brass); position: relative; overflow: hidden; }
+.hero-scroll .line::after {
+  content: ""; position: absolute; top: -40px; left: 0; width: 100%; height: 40px;
+  background: var(--terracotta); animation: scrollLine 2.2s ease-in-out infinite;
+}
+@keyframes scrollLine { 0% { top: -40px; } 60%,100% { top: 40px; } }
+
+/* ============================================================
+   06 · COLLECTIONS
+   ============================================================ */
+#collections { padding: var(--space-2xl) 0; background: var(--linen); position: relative; }
+.section-head { text-align: center; max-width: 640px; margin: 0 auto var(--space-lg); }
+.section-head .lede { margin: 1rem auto 0; }
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+}
+.collection-card {
+  position: relative;
+  background: var(--cream);
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--brass);
+  border-radius: var(--radius);
+  padding: 2.3rem 2rem 2rem;
+  transition: transform var(--t-med) var(--ease-hover),
+              box-shadow var(--t-med) var(--ease-hover),
+              border-color var(--t-fast) ease;
+  overflow: hidden;
+}
+.collection-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(181,83,44,0.06), transparent 60%);
+  opacity: 0; transition: opacity var(--t-med) ease;
+}
+.collection-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 48px -28px rgba(39,28,20,0.42);
+  border-top-color: var(--terracotta);
+}
+.collection-card:hover::before { opacity: 1; }
+.cc-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--brass);
+}
+.cc-title {
+  font-size: 1.7rem;
+  margin: 0.5rem 0 0.7rem;
+  color: var(--ink);
+}
+.cc-desc { color: var(--ink-soft); font-size: 0.96rem; margin-bottom: 1.3rem; }
+.cc-foot {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-top: 1rem; border-top: 1px dashed var(--hairline);
+}
+.cc-price { font-family: var(--font-display); color: var(--terracotta); font-size: 1.15rem; }
+.cc-price span { font-size: 0.74rem; color: var(--ink-soft); font-family: var(--font-body); letter-spacing: 0.08em; }
+.cc-tag {
+  font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--forest); font-weight: 700;
+}
+
+/* ============================================================
+   07 · ABOUT / OUR STORY
+   ============================================================ */
+#about { padding: var(--space-2xl) 0; background: var(--cream); position: relative; overflow: hidden; }
+.about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 4.5rem;
+  align-items: center;
+}
+.about-visual { position: relative; }
+.about-frame {
+  position: relative;
+  aspect-ratio: 5 / 6;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 36px 64px -34px rgba(39,28,20,0.5);
+  /* IMAGE SWAP POINT — about / shopkeeper portrait */
+  background:
+    linear-gradient(160deg, rgba(31,74,64,0.32), rgba(181,83,44,0.25)),
+    repeating-linear-gradient(135deg, #e7d4b6 0 20px, #ddc8a4 20px 40px),
+    var(--cream-deep);
+  background-size: cover; background-position: center;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1.1s var(--ease-soft);
+}
+.about-frame.in { clip-path: inset(0 0 0 0); }
+.about-frame::after {
+  content: ""; position: absolute; inset: 16px;
+  border: 1.5px solid rgba(251,247,239,0.5); border-radius: 2px;
+}
+.about-est {
+  position: absolute; top: -20px; right: -16px;
+  background: var(--terracotta); color: var(--linen);
+  font-family: var(--font-display); font-style: italic;
+  padding: 0.7rem 1.2rem; border-radius: var(--radius);
+  box-shadow: 0 14px 30px -14px rgba(143,62,31,0.7);
+  font-size: 1.05rem;
+}
+.about-copy .section-title { text-align: left; }
+.about-copy p { color: var(--ink-soft); margin-bottom: 1.2rem; font-size: 1.02rem; }
+.about-sign {
+  font-family: var(--font-display);
+  font-style: italic; font-size: 1.4rem; color: var(--ink);
+  margin-top: 0.4rem;
+}
+.about-sign span { display: block; font-family: var(--font-body); font-style: normal; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass); margin-top: 0.3rem; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.6rem;
+  padding-top: 2.2rem;
+  border-top: 1px solid var(--hairline);
+}
+.stat .num {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--terracotta);
+  line-height: 1;
+}
+.stat .label { font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin-top: 0.5rem; }
+
+/* ============================================================
+   08 · SPOTLIGHT (PARALLAX FEATURE)
+   ============================================================ */
+#spotlight {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  color: var(--linen);
+}
+.spotlight-bg {
+  position: absolute;
+  inset: -12% 0;
+  z-index: 0;
+  will-change: transform;
+  /* IMAGE SWAP POINT — full-width hamper / feature shot */
+  background:
+    linear-gradient(180deg, rgba(22,53,46,0.78), rgba(20,12,8,0.82)),
+    radial-gradient(80% 120% at 30% 20%, rgba(181,83,44,0.5), transparent 55%),
+    repeating-linear-gradient(45deg, #2c3a30 0 28px, #243029 28px 56px),
+    var(--forest-deep);
+  background-size: cover; background-position: center;
+}
+.spotlight-inner { position: relative; z-index: 2; max-width: 720px; padding: 5rem 1.5rem; }
+.spotlight-frame {
+  border: 1px solid rgba(216,184,120,0.5);
+  padding: 3.4rem clamp(1.5rem, 5vw, 4rem);
+  border-radius: var(--radius);
+  background: rgba(20, 12, 8, 0.18);
+  backdrop-filter: blur(2px);
+}
+.spotlight-eyebrow { color: var(--brass-light); }
+.spotlight-eyebrow::before, .spotlight-eyebrow::after { background: var(--brass-light); }
+.spotlight-title {
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  color: var(--linen);
+  margin: 1.2rem 0;
+  font-weight: 400;
+}
+.spotlight-title em { font-style: italic; color: var(--brass-light); }
+.spotlight-desc {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+  color: rgba(246,239,226,0.9);
+  max-width: 50ch; margin: 0 auto 2.2rem;
+}
+.spotlight-frame .btn-ghost { color: var(--linen); box-shadow: inset 0 0 0 1.5px var(--brass-light); }
+.spotlight-frame .btn-ghost:hover { background: var(--brass-light); color: var(--plum); }
+
+/* ============================================================
+   09 · GALLERY
+   ============================================================ */
+#gallery { padding: var(--space-2xl) 0; background: var(--linen); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 1.1rem;
+}
+.g-item {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--cream-deep);
+}
+/* asymmetric editorial spans */
+.g-item.tall { grid-row: span 2; }
+.g-item.wide { grid-column: span 2; }
+.g-item .g-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform var(--t-slow) var(--ease-hover);
+}
+.g-item:hover .g-img { transform: scale(1.07); }
+/* themed gradient placeholders — IMAGE SWAP POINTS */
+.g-1 { background: linear-gradient(150deg, #b5532c, #8f3e1f); }
+.g-2 { background: linear-gradient(150deg, #1f4a40, #16352e); }
+.g-3 { background: linear-gradient(150deg, #b78b46, #8a6630); }
+.g-4 { background: linear-gradient(150deg, #c98a5a, #9c5a34); }
+.g-5 { background: linear-gradient(150deg, #2a3a44, #1b2932); }
+.g-6 { background: linear-gradient(150deg, #d8b878, #ab8442); }
+.g-7 { background: linear-gradient(150deg, #6b4a2e, #3a2616); }
+.g-item .g-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(20,12,8,0.62));
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 1.2rem 1.3rem;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity var(--t-med) ease, transform var(--t-med) var(--ease-soft);
+}
+.g-item:hover .g-overlay { opacity: 1; transform: translateY(0); }
+.g-overlay .g-label { font-family: var(--font-display); color: var(--linen); font-size: 1.05rem; font-style: italic; }
+.g-overlay .g-view {
+  font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--brass-light); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+
+/* ============================================================
+   10 · TESTIMONIALS
+   ============================================================ */
+#testimonials {
+  position: relative;
+  padding: var(--space-2xl) 0;
+  background: var(--forest-deep);
+  color: var(--cream);
+  overflow: hidden;
+}
+#testimonials .shape-1 { width: 380px; height: 380px; top: -100px; left: -80px; background: var(--forest); opacity: 0.5; }
+#testimonials .shape-2 { width: 300px; height: 300px; bottom: -120px; right: -60px; background: var(--terracotta); opacity: 0.14; animation-delay: -8s; }
+.testi-head { text-align: center; margin-bottom: var(--space-lg); position: relative; z-index: 2; }
+.testi-head .eyebrow { color: var(--brass-light); }
+.testi-head .eyebrow::before, .testi-head .eyebrow::after { background: var(--brass-light); }
+.testi-head .section-title { color: var(--cream); }
+.testi-head .section-title em { color: var(--brass-light); }
+
+.testi-stage {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 280px;
+  z-index: 2;
+}
+.quote-mark {
+  position: absolute;
+  top: -70px; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 16rem;
+  line-height: 1;
+  color: var(--brass);
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+}
+.testi {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s ease, transform 0.8s var(--ease-soft);
+  pointer-events: none;
+}
+.testi.active { opacity: 1; transform: translateX(0); pointer-events: auto; position: relative; }
+.testi p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  line-height: 1.5;
+  color: var(--cream);
+  margin-bottom: 1.8rem;
+}
+.testi .stars { color: var(--brass-light); letter-spacing: 0.3em; margin-bottom: 0.7rem; }
+.testi .who { font-weight: 700; letter-spacing: 0.1em; color: var(--brass-light); text-transform: uppercase; font-size: 0.8rem; }
+.testi .where { display: block; font-weight: 400; letter-spacing: 0.05em; color: rgba(246,239,226,0.6); text-transform: none; font-size: 0.78rem; margin-top: 0.3rem; }
+.testi-dots { display: flex; justify-content: center; gap: 0.7rem; margin-top: 2.8rem; position: relative; z-index: 2; }
+.testi-dots button {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(216,184,120,0.32);
+  transition: background var(--t-fast) ease, transform var(--t-fast) ease;
+}
+.testi-dots button.active { background: var(--brass-light); transform: scale(1.3); }
+
+/* ============================================================
+   11 · ENQUIRY / CONTACT
+   ============================================================ */
+#contact { padding: var(--space-2xl) 0; background: var(--cream); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 4.5rem;
+  align-items: start;
+}
+.contact-aside .section-title { text-align: left; }
+.contact-aside .lede { margin-bottom: 2.4rem; }
+.contact-detail { margin-bottom: 1.6rem; }
+.contact-detail .k { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass); font-weight: 700; margin-bottom: 0.3rem; }
+.contact-detail .v { font-family: var(--font-display); font-size: 1.25rem; color: var(--ink); }
+.contact-detail .v small { display: block; font-family: var(--font-body); font-size: 0.92rem; color: var(--ink-soft); margin-top: 0.2rem; }
+
+.form-card {
+  background: var(--linen);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  box-shadow: 0 30px 60px -40px rgba(39,28,20,0.4);
+}
+.field { position: relative; margin-bottom: 1.7rem; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--hairline);
+  padding: 0.9rem 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+}
+.field textarea { resize: vertical; min-height: 90px; }
+.field select { color: var(--ink-soft); }
+.field label {
+  position: absolute;
+  left: 0; top: 0.9rem;
+  font-size: 1rem;
+  color: var(--ink-soft);
+  pointer-events: none;
+  transition: transform var(--t-med) var(--ease-soft), color var(--t-fast) ease, font-size var(--t-med) var(--ease-soft);
+}
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:focus + label,
+.field textarea:not(:placeholder-shown) + label,
+.field.filled label {
+  transform: translateY(-1.35rem);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+.field .focus-bar {
+  position: absolute; left: 0; bottom: 0;
+  height: 1.5px; width: 100%;
+  background: var(--terracotta);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--t-med) var(--ease-soft);
+}
+.field input:focus ~ .focus-bar,
+.field textarea:focus ~ .focus-bar,
+.field select:focus ~ .focus-bar { transform: scaleX(1); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.form-submit { width: 100%; margin-top: 0.6rem; }
+.form-note { font-size: 0.8rem; color: var(--ink-soft); margin-top: 1rem; text-align: center; }
+.form-success {
+  display: none;
+  margin-top: 1.2rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(31,74,64,0.1);
+  border: 1px solid var(--forest);
+  border-radius: var(--radius);
+  color: var(--forest);
+  font-size: 0.9rem;
+  text-align: center;
+}
+.form-success.show { display: block; }
+
+/* ============================================================
+   12 · FIND US
+   ============================================================ */
+#find { padding: 0 0 var(--space-2xl); background: var(--cream); }
+.map-wrap {
+  position: relative;
+  height: 460px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(216,184,120,0.18), transparent 40%),
+    linear-gradient(135deg, #e9ddc7 0%, #dfd0b4 100%);
+}
+/* stylised street lines */
+.map-wrap::before, .map-wrap::after {
+  content: ""; position: absolute; background: rgba(39,28,20,0.07);
+}
+.map-wrap::before { top: 0; bottom: 0; left: 38%; width: 22px; transform: skewX(-12deg); }
+.map-wrap::after  { left: 0; right: 0; top: 54%; height: 18px; transform: skewY(3deg); }
+.map-grid-line {
+  position: absolute; background: rgba(39,28,20,0.05);
+}
+.map-pin {
+  position: absolute;
+  top: 46%; left: 42%;
+  transform: translate(-50%, -100%);
+  z-index: 3;
+}
+.map-pin .pin-body {
+  width: 30px; height: 30px;
+  background: var(--terracotta);
+  border: 2px solid var(--linen);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 8px 18px -6px rgba(143,62,31,0.7);
+}
+.map-pin .pin-pulse {
+  position: absolute; left: 50%; top: 50%;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  transform: translate(-50%, -50%);
+  animation: pinPulse 2.4s ease-out infinite;
+  opacity: 0.5;
+}
+@keyframes pinPulse {
+  0% { transform: translate(-50%,-50%) scale(0.6); opacity: 0.5; }
+  100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
+}
+.map-card {
+  position: absolute;
+  bottom: 1.6rem; left: 1.6rem;
+  background: var(--linen);
+  border: 1px solid var(--hairline);
+  border-left: 4px solid var(--brass);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  max-width: 320px;
+  box-shadow: 0 20px 44px -24px rgba(39,28,20,0.5);
+}
+.map-card h4 { font-size: 1.2rem; margin-bottom: 0.4rem; }
+.map-card p { font-size: 0.9rem; color: var(--ink-soft); }
+.map-card .transport { margin-top: 0.7rem; padding-top: 0.7rem; border-top: 1px dashed var(--hairline); font-size: 0.82rem; color: var(--forest); font-weight: 600; }
+
+/* ============================================================
+   13 · FOOTER
+   ============================================================ */
+#footer {
+  background: var(--plum);
+  color: var(--cream);
+  padding: var(--space-xl) 0 2.4rem;
+  border-top: 3px solid var(--brass);
+  text-align: center;
+}
+.footer-wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  color: var(--cream);
+  font-weight: 400;
+}
+.footer-wordmark em { font-style: italic; color: var(--brass-light); }
+.footer-tag {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: rgba(246,239,226,0.7);
+  font-size: 1.1rem;
+  margin: 0.6rem 0 1.8rem;
+}
+.footer-social { display: flex; justify-content: center; gap: 2rem; margin-bottom: 3rem; }
+.footer-social a {
+  font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(246,239,226,0.75); font-weight: 600;
+  transition: letter-spacing var(--t-med) var(--ease-soft), color var(--t-fast) ease;
+}
+.footer-social a:hover { color: var(--brass-light); letter-spacing: 0.26em; }
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 820px;
+  margin: 0 auto 3rem;
+  padding: 2.6rem 0;
+  border-top: 1px solid rgba(216,184,120,0.22);
+  border-bottom: 1px solid rgba(216,184,120,0.22);
+  text-align: left;
+}
+.footer-col h5 { font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass-light); margin-bottom: 1rem; }
+.footer-col p, .footer-col a { display: block; font-size: 0.9rem; color: rgba(246,239,226,0.78); margin-bottom: 0.45rem; transition: color var(--t-fast) ease; }
+.footer-col a:hover { color: var(--brass-light); }
+.footer-copy { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(246,239,226,0.45); }
+
+/* ============================================================
+   14 · REVEAL UTILITIES + RESPONSIVE
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity var(--t-slow) var(--ease-soft), transform var(--t-slow) var(--ease-soft);
+}
+[data-reveal].in { opacity: 1; transform: translateY(0); }
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity var(--t-slow) var(--ease-soft), transform var(--t-slow) var(--ease-soft);
+}
+[data-stagger].in > * { opacity: 1; transform: translateY(0); }
+
+/* Main site hidden + inert beneath splash */
+#site { visibility: hidden; pointer-events: none; }
+#site.live { visibility: visible; pointer-events: auto; }
+
+/* — Responsive — */
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hero-visual { max-width: 420px; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .collection-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
+  .g-item.wide { grid-column: span 2; }
+}
+@media (max-width: 680px) {
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .collection-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; gap: 0; }
+  .footer-cols { grid-template-columns: 1fr; text-align: center; gap: 2.2rem; }
+  .stats { gap: 1rem; }
+  .hero-badge { width: 96px; height: 96px; font-size: 0.8rem; }
+  .map-card { left: 1rem; right: 1rem; bottom: 1rem; max-width: none; }
+}
+
+/* — Reduced motion — */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal], [data-stagger] > * { opacity: 1 !important; transform: none !important; }
+  .reveal-word > span { transform: none !important; }
+}
+</style>
+</head>
+<body class="is-locked">
+
+<!-- ============================================================
+     GRAIN OVERLAY
+     ============================================================ -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============================================================
+     03 · SPLASH / ENTRY PAGE
+     ============================================================ -->
+<div id="splash">
+  <div class="splash-vignette"></div>
+  <div class="splash-inner">
+    <p class="splash-mark">Glasgow · West End · Est. 2011</p>
+    <h1 class="splash-title">Thistle <em>&amp;</em> Trove</h1>
+    <p class="splash-sub">A little emporium of considered gifts &amp; curious treasures.</p>
+    <button class="splash-enter" id="enterBtn" aria-label="Enter the shop">
+      Step Inside <span class="arrow">&rarr;</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN SITE (rendered, hidden + inert until splash exits)
+     ============================================================ -->
+<div id="site">
+
+  <!-- ========================================================
+       04 · NAVIGATION
+       ======================================================== -->
+  <nav id="nav" aria-label="Primary">
+    <a href="#hero" class="nav-logo">Thistle <span class="amp">&amp;</span> Trove <span class="dot"></span></a>
+    <div class="nav-links">
+      <a href="#collections">Collections</a>
+      <a href="#about">Our Story</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#testimonials">Loved By</a>
+      <a href="#contact" class="nav-cta">Enquire</a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile slide-in panel -->
+  <div class="mobile-panel" id="mobilePanel">
+    <p class="m-tag">Thistle &amp; Trove</p>
+    <a href="#collections">Collections</a>
+    <a href="#about">Our Story</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#testimonials">Loved By</a>
+    <a href="#contact">Enquire</a>
+  </div>
+
+  <!-- ========================================================
+       05 · HERO
+       ======================================================== -->
+  <header id="hero">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow solo">The West End Gift Emporium</span>
+        <h2 class="hero-headline" id="heroHeadline">
+          Gifts worth <em>unwrapping.</em>
+        </h2>
+        <p class="hero-tag">
+          Tucked just off Byres Road, we gather keepsakes, candles and Scottish-made
+          curiosities for the people you love — and the moments worth marking.
+        </p>
+        <div class="hero-actions">
+          <a href="#collections" class="btn btn-primary" data-ripple>Browse the Shelves</a>
+          <a href="#contact" class="btn btn-ghost" data-ripple>Build a Hamper</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-frame"></div>
+        <div class="hero-badge"><span><b>200+</b> local makers stocked</span></div>
+      </div>
+    </div>
+
+    <div class="hero-scroll"><span>Scroll</span><span class="line"></span></div>
+  </header>
+
+  <!-- ========================================================
+       06 · COLLECTIONS
+       ======================================================== -->
+  <section id="collections">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">What you'll find</span>
+        <h2 class="section-title">Curated <em>collections</em></h2>
+        <p class="lede">Every shelf is hand-picked — no two visits the same. A few of the corners
+          our regulars wander to first.</p>
+      </div>
+
+      <div class="collection-grid" data-stagger>
+        <!-- card -->
+        <article class="collection-card">
+          <span class="cc-num">i.</span>
+          <h3 class="cc-title">For Her</h3>
+          <p class="cc-desc">Botanical jewellery, silk scrunchies, hand-poured perfumes and the kind of trinket dish she'll actually use.</p>
+          <div class="cc-foot"><span class="cc-price">£12<span> – £65</span></span><span class="cc-tag">Bestseller</span></div>
+        </article>
+
+        <article class="collection-card">
+          <span class="cc-num">ii.</span>
+          <h3 class="cc-title">For Him</h3>
+          <p class="cc-desc">Leather card holders, whisky stones, enamel pins and pocket-sized field notebooks bound in Glasgow.</p>
+          <div class="cc-foot"><span class="cc-price">£14<span> – £58</span></span><span class="cc-tag">New in</span></div>
+        </article>
+
+        <article class="collection-card">
+          <span class="cc-num">iii.</span>
+          <h3 class="cc-title">Proudly Scottish</h3>
+          <p class="cc-desc">Harris tweed coasters, Clyde-built ceramics and tablet from a wee kitchen in Partick. Made within twenty miles.</p>
+          <div class="cc-foot"><span class="cc-price">£8<span> – £48</span></span><span class="cc-tag">Local</span></div>
+        </article>
+
+        <article class="collection-card">
+          <span class="cc-num">iv.</span>
+          <h3 class="cc-title">Home &amp; Candle</h3>
+          <p class="cc-desc">Soy candles in fig &amp; oak, stoneware vases, linen tea towels and prints of the Glasgow skyline.</p>
+          <div class="cc-foot"><span class="cc-price">£10<span> – £42</span></span><span class="cc-tag">Loved</span></div>
+        </article>
+
+        <article class="collection-card">
+          <span class="cc-num">v.</span>
+          <h3 class="cc-title">Little Ones</h3>
+          <p class="cc-desc">Hand-knitted bears, wooden rattles, story books and christening keepsakes wrapped to keep.</p>
+          <div class="cc-foot"><span class="cc-price">£9<span> – £36</span></span><span class="cc-tag">Gift-ready</span></div>
+        </article>
+
+        <article class="collection-card">
+          <span class="cc-num">vi.</span>
+          <h3 class="cc-title">Cards &amp; Wrap</h3>
+          <p class="cc-desc">Letterpress cards, recycled kraft wrap, wax seals and ribbon by the metre — finished free in-store.</p>
+          <div class="cc-foot"><span class="cc-price">£3<span> – £15</span></span><span class="cc-tag">Always free wrapping</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       07 · ABOUT / OUR STORY
+       ======================================================== -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="about-visual">
+        <div class="about-frame" data-about-frame></div>
+        <div class="about-est">Est. 2011</div>
+      </div>
+
+      <div class="about-copy" data-reveal>
+        <span class="eyebrow solo">Our Story</span>
+        <h2 class="section-title">Gathered in <em>Glasgow</em>, with care.</h2>
+        <p>Thistle &amp; Trove began on a rainy afternoon in 2011, when Eilidh swapped a desk in the
+          city centre for a narrow shopfront on Cresswell Lane. The idea was simple: a shop where you
+          could find a gift you'd be genuinely proud to give — nothing mass-made, nothing forgettable.</p>
+        <p>Fourteen years on, we work with more than two hundred makers, most of them within a few miles
+          of the front door. Every piece is chosen by hand, wrapped by hand, and sent off with a wee
+          note if you'd like one. Come in out of the rain and have a look.</p>
+        <p class="about-sign">Eilidh &amp; the Trove team
+          <span>Keepers of the shop</span>
+        </p>
+
+        <div class="stats" data-stats>
+          <div class="stat"><div class="num" data-count="2011" data-suffix="">2011</div><div class="label">Opened our doors</div></div>
+          <div class="stat"><div class="num" data-count="214" data-suffix="+">0</div><div class="label">Local makers stocked</div></div>
+          <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Wrapped by hand</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       08 · SPOTLIGHT (PARALLAX FEATURE)
+       ======================================================== -->
+  <section id="spotlight">
+    <div class="spotlight-bg" id="spotlightBg"></div>
+    <div class="spotlight-inner">
+      <div class="spotlight-frame" data-reveal>
+        <span class="eyebrow spotlight-eyebrow">The signature gift</span>
+        <h2 class="spotlight-title">The <em>Clyde Hamper</em></h2>
+        <p class="spotlight-desc">A willow basket packed with the best of the West End — fig candle,
+          Partick tablet, a hand-thrown mug and a letterpress card, all tied with tweed ribbon.
+          Built to your budget, delivered across Glasgow.</p>
+        <a href="#contact" class="btn btn-ghost" data-ripple>Build This Hamper</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       09 · GALLERY
+       ======================================================== -->
+  <section id="gallery">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Around the shop</span>
+        <h2 class="section-title">A peek <em>inside</em></h2>
+        <p class="lede">Window displays, wrapping benches and the shelves our regulars love.</p>
+      </div>
+
+      <div class="gallery-grid" data-stagger>
+        <!-- IMAGE SWAP POINTS — replace .g-img backgrounds with photos -->
+        <div class="g-item tall"><div class="g-img g-1"></div><div class="g-overlay"><span class="g-label">The candle wall</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item"><div class="g-img g-2"></div><div class="g-overlay"><span class="g-label">Scottish makers</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item"><div class="g-img g-3"></div><div class="g-overlay"><span class="g-label">Brass &amp; trinkets</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item wide"><div class="g-img g-4"></div><div class="g-overlay"><span class="g-label">The wrapping bench</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item"><div class="g-img g-5"></div><div class="g-overlay"><span class="g-label">Cards &amp; print</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item"><div class="g-img g-6"></div><div class="g-overlay"><span class="g-label">Hampers in the making</span><span class="g-view">View &rarr;</span></div></div>
+        <div class="g-item wide"><div class="g-img g-7"></div><div class="g-overlay"><span class="g-label">The shopfront on Cresswell Lane</span><span class="g-view">View &rarr;</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       10 · TESTIMONIALS
+       ======================================================== -->
+  <section id="testimonials">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="wrap">
+      <div class="testi-head">
+        <span class="eyebrow">Kind words</span>
+        <h2 class="section-title">Loved by <em>Glasgow</em></h2>
+      </div>
+
+      <div class="testi-stage">
+        <span class="quote-mark">&ldquo;</span>
+
+        <figure class="testi active">
+          <div class="stars">★★★★★</div>
+          <p>"I've stopped buying gifts anywhere else. Whatever the occasion, they always find something that feels properly thought through — and the wrapping is a wee gift in itself."</p>
+          <figcaption class="who">Claire M. <span class="where">Hyndland</span></figcaption>
+        </figure>
+
+        <figure class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"Got my maw a Clyde Hamper for her sixtieth and she nearly greet. Genuinely the nicest wee shop in the West End — pure quality, no tat."</p>
+          <figcaption class="who">Daniel R. <span class="where">Partick</span></figcaption>
+        </figure>
+
+        <figure class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"Eilidh remembered exactly what I'd bought last Christmas and helped me match it. That's the kind of service you just don't get on the high street anymore."</p>
+          <figcaption class="who">Senga D. <span class="where">Kelvinbridge</span></figcaption>
+        </figure>
+
+        <figure class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"Everything's made round the corner and you can tell. I came in for a card and left with half my Christmas shopping done. Dangerous wee place, in the best way."</p>
+          <figcaption class="who">Tom &amp; Aisha <span class="where">Dowanhill</span></figcaption>
+        </figure>
+
+        <figure class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"Wrapped a last-minute anniversary present for me in under five minutes and it looked like it cost a fortune. Total lifesavers, honestly."</p>
+          <figcaption class="who">Marie L. <span class="where">Finnieston</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="testi-dots" id="testiDots" aria-label="Testimonial navigation"></div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       11 · ENQUIRY / CONTACT
+       ======================================================== -->
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-aside" data-reveal>
+        <span class="eyebrow solo">Say hello</span>
+        <h2 class="section-title">Build a gift, <em>or just ask.</em></h2>
+        <p class="lede">Planning a hamper, a wedding favour run, or a corporate order? Tell us a little
+          and we'll come back the same day.</p>
+
+        <div class="contact-detail">
+          <div class="k">Find us</div>
+          <div class="v">21 Cresswell Lane<small>Glasgow, G12 8AA</small></div>
+        </div>
+        <div class="contact-detail">
+          <div class="k">Call the shop</div>
+          <div class="v">0141 942 0117</div>
+        </div>
+        <div class="contact-detail">
+          <div class="k">Opening hours</div>
+          <div class="v">Mon–Sat 10–6<small>Sunday 11–5 · closed bank holidays</small></div>
+        </div>
+      </div>
+
+      <form class="form-card" id="enquiryForm" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <input type="text" id="name" placeholder=" " required />
+            <label for="name">Your name</label>
+            <span class="focus-bar"></span>
+          </div>
+          <div class="field">
+            <input type="email" id="email" placeholder=" " required />
+            <label for="email">Email</label>
+            <span class="focus-bar"></span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <input type="tel" id="phone" placeholder=" " />
+            <label for="phone">Phone (optional)</label>
+            <span class="focus-bar"></span>
+          </div>
+          <div class="field filled">
+            <select id="reason">
+              <option value="hamper">A bespoke hamper</option>
+              <option value="gift">Help choosing a gift</option>
+              <option value="wedding">Wedding / event favours</option>
+              <option value="corporate">Corporate order</option>
+              <option value="other">Something else</option>
+            </select>
+            <label for="reason">I'm after…</label>
+            <span class="focus-bar"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <input type="text" id="budget" placeholder=" " />
+          <label for="budget">Rough budget (optional)</label>
+          <span class="focus-bar"></span>
+        </div>
+
+        <div class="field">
+          <textarea id="message" placeholder=" " required></textarea>
+          <label for="message">Tell us a little more</label>
+          <span class="focus-bar"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary form-submit" data-ripple>Send Enquiry</button>
+        <p class="form-note">We reply the same day, Mon–Sat. No mailing lists, ever.</p>
+        <div class="form-success" id="formSuccess">Thank you — your enquiry's in. We'll be in touch shortly. ✦</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       12 · FIND US
+       ======================================================== -->
+  <section id="find">
+    <div class="wrap">
+      <div class="section-head" data-reveal style="margin-bottom:2.4rem">
+        <span class="eyebrow">Find the shop</span>
+        <h2 class="section-title">Just off <em>Byres Road</em></h2>
+      </div>
+      <div class="map-wrap" data-reveal>
+        <span class="map-grid-line" style="top:24%;left:0;right:0;height:12px;transform:skewY(-2deg)"></span>
+        <span class="map-grid-line" style="top:0;bottom:0;left:68%;width:14px;transform:skewX(8deg)"></span>
+        <div class="map-pin">
+          <span class="pin-pulse"></span>
+          <span class="pin-body"></span>
+        </div>
+        <div class="map-card">
+          <h4>Thistle &amp; Trove</h4>
+          <p>21 Cresswell Lane, Glasgow, G12 8AA</p>
+          <p class="transport">↧ 3 min from Hillhead subway · steps from De Courcy's Arcade</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       13 · FOOTER
+       ======================================================== -->
+  <footer id="footer">
+    <div class="wrap">
+      <div class="footer-wordmark">Thistle <em>&amp;</em> Trove</div>
+      <p class="footer-tag">Considered gifts, gathered in Glasgow.</p>
+      <div class="footer-social">
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+        <a href="#">Facebook</a>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Opening Hours</h5>
+          <p>Mon – Sat · 10am – 6pm</p>
+          <p>Sunday · 11am – 5pm</p>
+          <p>Closed bank holidays</p>
+        </div>
+        <div class="footer-col">
+          <h5>Find Us</h5>
+          <p>21 Cresswell Lane</p>
+          <p>Glasgow, G12 8AA</p>
+          <p>0141 942 0117</p>
+        </div>
+        <div class="footer-col">
+          <h5>Wander To</h5>
+          <a href="#collections">Collections</a>
+          <a href="#about">Our Story</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#contact">Enquire</a>
+        </div>
+      </div>
+
+      <p class="footer-copy">© 2011–2026 Thistle &amp; Trove · Glasgow West End</p>
+    </div>
+  </footer>
+
+</div><!-- /#site -->
+
+<script>
+/* ================================================================
+   THISTLE & TROVE — interaction layer (vanilla JS only)
+   ----------------------------------------------------------------
+   A  Splash entry + reveal handoff
+   B  Hero headline word-wrap + entrance
+   C  Navigation (scroll state, burger, mobile panel, smooth scroll)
+   D  Intersection Observer scroll reveals
+   E  Count-up stats
+   F  About frame reveal
+   G  Spotlight parallax
+   H  Testimonials carousel
+   I  Floating-label selects + form submit
+   J  Button ripple
+   ================================================================ */
+(function () {
+  'use strict';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- B · Wrap the hero headline into per-word reveal spans ---- */
+  var headline = document.getElementById('heroHeadline');
+  function wrapWords(el) {
+    var html = el.innerHTML;
+    // tokenise, preserving <em> wrappers around words
+    var temp = document.createElement('div');
+    temp.innerHTML = html;
+    var out = [];
+    var i = 0;
+    function pushWord(word, isEm) {
+      var delay = (i * 0.09).toFixed(2);
+      var open = isEm ? '<em>' : '';
+      var close = isEm ? '</em>' : '';
+      out.push('<span class="reveal-word">' + open +
+               '<span style="transition-delay:' + delay + 's">' + word +
+               '</span>' + close + '</span> ');
+      i++;
+    }
+    temp.childNodes.forEach(function (node) {
+      if (node.nodeType === 3) {
+        node.textContent.split(/\s+/).filter(Boolean).forEach(function (w) { pushWord(w, false); });
+      } else if (node.nodeName === 'EM') {
+        node.textContent.split(/\s+/).filter(Boolean).forEach(function (w) { pushWord(w, true); });
+      }
+    });
+    el.innerHTML = out.join('');
+  }
+  if (headline) wrapWords(headline);
+
+  /* ---- A · Splash entry → reveal main site ---- */
+  var splash = document.getElementById('splash');
+  var site = document.getElementById('site');
+  var body = document.body;
+  var hero = document.getElementById('hero');
+  var enterBtn = document.getElementById('enterBtn');
+
+  function enterSite() {
+    if (!splash) return;
+    splash.classList.add('exit');
+    // Reveal main site as the curtain wipes
+    site.classList.add('live');
+    body.classList.remove('is-locked');
+
+    // Fire hero entrance shortly after the wipe begins
+    setTimeout(function () { hero.classList.add('hero-ready'); }, 350);
+
+    // Remove splash from the DOM entirely once the transition finishes
+    var removed = false;
+    function cleanup() {
+      if (removed) return; removed = true;
+      if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+    }
+    splash.addEventListener('transitionend', cleanup);
+    setTimeout(cleanup, 1600); // safety net
+  }
+  if (enterBtn) {
+    enterBtn.addEventListener('click', enterSite);
+  }
+  // Keyboard: Enter/Space on focused button already works; allow Esc-free flow.
+
+  /* ---- C · Navigation ---- */
+  var nav = document.getElementById('nav');
+  var burger = document.getElementById('burger');
+  var panel = document.getElementById('mobilePanel');
+
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 40) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }, { passive: true });
+
+  function closePanel() {
+    panel.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+  burger.addEventListener('click', function () {
+    var open = panel.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Smooth-scroll anchor handler (eased, accounts for fixed nav)
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var id = link.getAttribute('href');
+      if (id === '#' || id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      closePanel();
+      var top = target.getBoundingClientRect().top + window.pageYOffset - 64;
+      window.scrollTo({ top: top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* ---- D · Scroll reveals (Intersection Observer + resilient fallback) ----
+     IntersectionObserver is the primary mechanism. A passive scroll/resize
+     fallback guarantees nothing is ever left stuck invisible if IO doesn't
+     fire (older engines / odd render contexts). Each element reveals once. */
+  function revealEl(el) {
+    if (el.classList.contains('in')) return;
+    if (el.hasAttribute('data-stagger')) {
+      Array.prototype.forEach.call(el.children, function (child, idx) {
+        child.style.transitionDelay = (idx * 0.12) + 's';
+      });
+    }
+    el.classList.add('in');
+  }
+
+  var revealEls = Array.prototype.slice.call(
+    document.querySelectorAll('[data-reveal], [data-stagger]')
+  );
+
+  var io = ('IntersectionObserver' in window)
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { revealEl(entry.target); io.unobserve(entry.target); }
+        });
+      }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' })
+    : null;
+
+  if (io) revealEls.forEach(function (el) { io.observe(el); });
+
+  // Fallback: reveal anything within the viewport on scroll/resize/load.
+  function checkRevealsFallback() {
+    var vh = window.innerHeight;
+    for (var i = revealEls.length - 1; i >= 0; i--) {
+      var el = revealEls[i];
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.92 && r.bottom > 0) {
+        revealEl(el);
+        revealEls.splice(i, 1);
+      }
+    }
+  }
+  window.addEventListener('scroll', checkRevealsFallback, { passive: true });
+  window.addEventListener('resize', checkRevealsFallback, { passive: true });
+  // initial sweep (covers above-the-fold + IO-less environments)
+  setTimeout(checkRevealsFallback, 200);
+  // last-resort safety net: never leave content permanently hidden
+  setTimeout(function () { revealEls.slice().forEach(revealEl); }, 4000);
+
+  /* ---- E · Count-up stats ---- */
+  var statsBlock = document.querySelector('[data-stats]');
+  function runCount(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    var isYear = target > 1900;
+    var dur = 1600, start = null;
+    var from = isYear ? target - 30 : 0;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var val = Math.round(from + (target - from) * eased);
+      el.textContent = val + suffix;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+  var statsDone = false;
+  function fireStats() {
+    if (statsDone || !statsBlock) return;
+    statsDone = true;
+    statsBlock.querySelectorAll('[data-count]').forEach(runCount);
+  }
+  if (statsBlock) {
+    if ('IntersectionObserver' in window) {
+      var statsIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { fireStats(); statsIO.disconnect(); }
+        });
+      }, { threshold: 0.4 });
+      statsIO.observe(statsBlock);
+    }
+    // fallback: trigger when the stats block scrolls into view
+    var statsFallback = function () {
+      if (statsDone) return;
+      var r = statsBlock.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.85 && r.bottom > 0) fireStats();
+    };
+    window.addEventListener('scroll', statsFallback, { passive: true });
+    setTimeout(statsFallback, 250);
+  }
+
+  /* ---- F · About frame clip reveal ---- */
+  var aboutFrame = document.querySelector('[data-about-frame]');
+  function fireAboutFrame() { if (aboutFrame) aboutFrame.classList.add('in'); }
+  if (aboutFrame) {
+    if ('IntersectionObserver' in window) {
+      var afIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { fireAboutFrame(); afIO.disconnect(); }
+        });
+      }, { threshold: 0.3 });
+      afIO.observe(aboutFrame);
+    }
+    var afFallback = function () {
+      if (aboutFrame.classList.contains('in')) return;
+      var r = aboutFrame.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.9 && r.bottom > 0) fireAboutFrame();
+    };
+    window.addEventListener('scroll', afFallback, { passive: true });
+    setTimeout(afFallback, 250);
+  }
+
+  /* ---- G · Spotlight parallax (passive) ---- */
+  var spotBg = document.getElementById('spotlightBg');
+  var spotSection = document.getElementById('spotlight');
+  if (spotBg && spotSection && !reduceMotion) {
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        var rect = spotSection.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+          var offset = (rect.top - window.innerHeight / 2) * 0.12;
+          spotBg.style.transform = 'translateY(' + offset + 'px)';
+        }
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  /* ---- H · Testimonials carousel ---- */
+  var testis = Array.prototype.slice.call(document.querySelectorAll('.testi'));
+  var dotsWrap = document.getElementById('testiDots');
+  var current = 0, testiTimer = null;
+  if (testis.length && dotsWrap) {
+    testis.forEach(function (_, idx) {
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Testimonial ' + (idx + 1));
+      if (idx === 0) b.classList.add('active');
+      b.addEventListener('click', function () { goTo(idx); resetTimer(); });
+      dotsWrap.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+
+    function goTo(n) {
+      testis[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (n + testis.length) % testis.length;
+      testis[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+    function next() { goTo(current + 1); }
+    function startTimer() { if (!reduceMotion) testiTimer = setInterval(next, 5500); }
+    function resetTimer() { clearInterval(testiTimer); startTimer(); }
+
+    var stage = document.querySelector('.testi-stage');
+    stage.addEventListener('mouseenter', function () { clearInterval(testiTimer); });
+    stage.addEventListener('mouseleave', startTimer);
+    startTimer();
+  }
+
+  /* ---- I · Floating-label selects + form submit ---- */
+  document.querySelectorAll('.field select').forEach(function (sel) {
+    sel.closest('.field').classList.add('filled');
+  });
+
+  var form = document.getElementById('enquiryForm');
+  var success = document.getElementById('formSuccess');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      // light validation
+      var ok = true;
+      ['name', 'email', 'message'].forEach(function (id) {
+        var f = document.getElementById(id);
+        if (!f.value.trim()) { ok = false; f.style.borderBottomColor = 'var(--terracotta)'; }
+      });
+      if (!ok) return;
+      success.classList.add('show');
+      form.querySelectorAll('input, textarea').forEach(function (f) {
+        f.value = '';
+        f.closest('.field').classList.remove('filled');
+      });
+      // re-flag selects as filled
+      document.querySelectorAll('.field select').forEach(function (sel) {
+        sel.closest('.field').classList.add('filled');
+      });
+      setTimeout(function () { success.classList.remove('show'); }, 6000);
+    });
+  }
+
+  /* ---- J · Button ripple from click point ---- */
+  document.querySelectorAll('[data-ripple]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (e) {
+      var rect = btn.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var r = document.createElement('span');
+      r.className = 'ripple';
+      r.style.width = r.style.height = size + 'px';
+      r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      r.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      btn.appendChild(r);
+      setTimeout(function () { r.remove(); }, 720);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
