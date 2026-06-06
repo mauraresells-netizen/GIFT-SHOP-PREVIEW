@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Gift Shop — A Glasgow Gift Emporium</title>
 <meta name="description" content="Gift Shop — a curated West End gift emporium in Glasgow. Treasures, candles, Scottish-made keepsakes and bespoke hampers, gathered since 2011." />
+<!-- Imagery: optimised Creative-Commons (commercial-use) placeholders via Openverse,
+     intended to be swapped for the client's own photography. -->
+<link rel="preload" as="image" href="img/hero.jpg" />
 
 <!-- ============================================================
      GOOGLE FONTS  ·  Fraunces (display serif) + Karla (body)
@@ -594,13 +597,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 40px 70px -36px rgba(39,28,20,0.5);
-  /* IMAGE SWAP POINT — hero product still */
+  /* IMAGE SWAP POINT — hero shop interior */
   background:
-    linear-gradient(150deg, rgba(58,36,64,0.30), rgba(162,58,87,0.24)),
-    repeating-linear-gradient(45deg, #e7dcdd 0 18px, #ddccd0 18px 36px),
+    linear-gradient(150deg, rgba(58,36,64,0.10), rgba(162,58,87,0.06)),
+    url('img/hero.jpg') center/cover no-repeat,
     var(--cream-deep);
-  background-size: cover;
-  background-position: center;
 }
 .hero-frame::after {
   content: "";
@@ -762,12 +763,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 36px 64px -34px rgba(39,28,20,0.5);
-  /* IMAGE SWAP POINT — about / shopkeeper portrait */
+  /* IMAGE SWAP POINT — about / our story */
   background:
-    linear-gradient(160deg, rgba(58,36,64,0.36), rgba(162,58,87,0.28)),
-    repeating-linear-gradient(135deg, #e6dadb 0 20px, #d8c6cb 20px 40px),
+    linear-gradient(160deg, rgba(58,36,64,0.14), rgba(162,58,87,0.10)),
+    url('img/about.jpg') center/cover no-repeat,
     var(--cream-deep);
-  background-size: cover; background-position: center;
   clip-path: inset(0 0 100% 0);
   transition: clip-path 1.1s var(--ease-soft);
 }
@@ -830,9 +830,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   will-change: transform;
   /* IMAGE SWAP POINT — full-width hamper / feature shot */
   background:
-    linear-gradient(180deg, rgba(39,22,41,0.80), rgba(20,12,18,0.84)),
-    radial-gradient(80% 120% at 30% 20%, rgba(162,58,87,0.5), transparent 55%),
-    repeating-linear-gradient(45deg, #3a2440 0 28px, #2e1c33 28px 56px),
+    linear-gradient(180deg, rgba(39,22,41,0.78), rgba(20,12,18,0.82)),
+    radial-gradient(80% 120% at 30% 20%, rgba(162,58,87,0.32), transparent 55%),
+    url('img/spotlight.jpg') center/cover no-repeat,
     var(--forest-deep);
   background-size: cover; background-position: center;
 }
@@ -890,13 +890,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .g-item:hover .g-img { transform: scale(1.07); }
 /* themed gradient placeholders — IMAGE SWAP POINTS */
-.g-1 { background: linear-gradient(150deg, #a23a57, #7e2a42); }
-.g-2 { background: linear-gradient(150deg, #3a2440, #271629); }
-.g-3 { background: linear-gradient(150deg, #b89150, #8a6a34); }
-.g-4 { background: linear-gradient(150deg, #b56b82, #8a4a60); }
-.g-5 { background: linear-gradient(150deg, #3a2a48, #241a30); }
-.g-6 { background: linear-gradient(150deg, #ddbd80, #b08c46); }
-.g-7 { background: linear-gradient(150deg, #5a3a4e, #2e1c2e); }
+/* IMAGE SWAP POINTS — gallery tiles (gradient kept as load fallback) */
+.g-1 { background: linear-gradient(150deg,#a23a57,#7e2a42); background: url('img/gal1.jpg') center/cover no-repeat, #a23a57; }
+.g-2 { background: linear-gradient(150deg,#3a2440,#271629); background: url('img/gal2.jpg') center/cover no-repeat, #3a2440; }
+.g-3 { background: linear-gradient(150deg,#b89150,#8a6a34); background: url('img/gal3.jpg') center/cover no-repeat, #b89150; }
+.g-4 { background: linear-gradient(150deg,#b56b82,#8a4a60); background: url('img/gal4.jpg') center/cover no-repeat, #b56b82; }
+.g-5 { background: linear-gradient(150deg,#3a2a48,#241a30); background: url('img/gal5.jpg') center/cover no-repeat, #3a2a48; }
+.g-6 { background: linear-gradient(150deg,#ddbd80,#b08c46); background: url('img/gal6.jpg') center/cover no-repeat, #ddbd80; }
+.g-7 { background: linear-gradient(150deg,#5a3a4e,#2e1c2e); background: url('img/gal7.jpg') center/cover no-repeat, #5a3a4e; }
 .g-item .g-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(180deg, transparent 40%, rgba(20,12,8,0.62));
@@ -1321,17 +1322,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
        ======================================================== -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>Free gift wrapping</span><span class="sep">✦</span>
-      <span>200+ local makers</span><span class="sep">✦</span>
-      <span>Same-day Glasgow hampers</span><span class="sep">✦</span>
-      <span>Cards finished free in-store</span><span class="sep">✦</span>
-      <span>Est. 2011 · West End</span><span class="sep">✦</span>
+      <span>Free gift wrapping</span><span class="sep">·</span>
+      <span>200+ local makers</span><span class="sep">·</span>
+      <span>Same-day Glasgow hampers</span><span class="sep">·</span>
+      <span>Cards finished free in-store</span><span class="sep">·</span>
+      <span>Est. 2011 · West End</span><span class="sep">·</span>
       <!-- duplicate set for the seamless loop -->
-      <span>Free gift wrapping</span><span class="sep">✦</span>
-      <span>200+ local makers</span><span class="sep">✦</span>
-      <span>Same-day Glasgow hampers</span><span class="sep">✦</span>
-      <span>Cards finished free in-store</span><span class="sep">✦</span>
-      <span>Est. 2011 · West End</span><span class="sep">✦</span>
+      <span>Free gift wrapping</span><span class="sep">·</span>
+      <span>200+ local makers</span><span class="sep">·</span>
+      <span>Same-day Glasgow hampers</span><span class="sep">·</span>
+      <span>Cards finished free in-store</span><span class="sep">·</span>
+      <span>Est. 2011 · West End</span><span class="sep">·</span>
     </div>
   </div>
 
@@ -1455,14 +1456,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       </div>
 
       <div class="gallery-grid" data-stagger>
-        <!-- IMAGE SWAP POINTS — replace .g-img backgrounds with photos -->
-        <div class="g-item tall"><div class="g-img g-1"></div><div class="g-overlay"><span class="g-label">The candle wall</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item"><div class="g-img g-2"></div><div class="g-overlay"><span class="g-label">Scottish makers</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item"><div class="g-img g-3"></div><div class="g-overlay"><span class="g-label">Brass &amp; trinkets</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item wide"><div class="g-img g-4"></div><div class="g-overlay"><span class="g-label">The wrapping bench</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item"><div class="g-img g-5"></div><div class="g-overlay"><span class="g-label">Cards &amp; print</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item"><div class="g-img g-6"></div><div class="g-overlay"><span class="g-label">Hampers in the making</span><span class="g-view">View &rarr;</span></div></div>
-        <div class="g-item wide"><div class="g-img g-7"></div><div class="g-overlay"><span class="g-label">The shopfront on Cresswell Lane</span><span class="g-view">View &rarr;</span></div></div>
+        <!-- Gallery tiles — backgrounds wired in CSS (.g-1 … .g-7) -->
+        <div class="g-item tall"><div class="g-img g-1"></div><div class="g-overlay"><span class="g-label">On our shelves</span><span class="g-view">View</span></div></div>
+        <div class="g-item"><div class="g-img g-2"></div><div class="g-overlay"><span class="g-label">Handmade ceramics</span><span class="g-view">View</span></div></div>
+        <div class="g-item"><div class="g-img g-3"></div><div class="g-overlay"><span class="g-label">Jewellery and keepsakes</span><span class="g-view">View</span></div></div>
+        <div class="g-item wide"><div class="g-img g-4"></div><div class="g-overlay"><span class="g-label">Wrapped with care</span><span class="g-view">View</span></div></div>
+        <div class="g-item"><div class="g-img g-5"></div><div class="g-overlay"><span class="g-label">Cards and paper</span><span class="g-view">View</span></div></div>
+        <div class="g-item"><div class="g-img g-6"></div><div class="g-overlay"><span class="g-label">Finishing touches</span><span class="g-view">View</span></div></div>
+        <div class="g-item wide"><div class="g-img g-7"></div><div class="g-overlay"><span class="g-label">Our storefront</span><span class="g-view">View</span></div></div>
       </div>
     </div>
   </section>
@@ -1589,7 +1590,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
         <button type="submit" class="btn btn-primary form-submit" data-ripple>Send Enquiry</button>
         <p class="form-note">We reply the same day, Mon–Sat. No mailing lists, ever.</p>
-        <div class="form-success" id="formSuccess">Thank you — your enquiry's in. We'll be in touch shortly. ✦</div>
+        <div class="form-success" id="formSuccess">Thank you, your enquiry is in. We'll be in touch shortly.</div>
       </form>
     </div>
   </section>
@@ -1613,7 +1614,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="map-card">
           <h4>Gift Shop</h4>
           <p>21 Cresswell Lane, Glasgow, G12 8AA</p>
-          <p class="transport">↧ 3 min from Hillhead subway · steps from De Courcy's Arcade</p>
+          <p class="transport">3 minutes from Hillhead subway · steps from De Courcy's Arcade</p>
         </div>
       </div>
     </div>
