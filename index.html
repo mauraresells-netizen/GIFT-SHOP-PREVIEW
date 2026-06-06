@@ -225,10 +225,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .shape {
   position: absolute;
   border-radius: 50%;
-  filter: blur(48px);
+  filter: blur(38px);
   opacity: 0.5;
   pointer-events: none;
   will-change: transform;
+  transform: translateZ(0);
   animation: drift 22s ease-in-out infinite alternate;
 }
 @keyframes drift {
@@ -417,8 +418,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-bottom: 1px solid transparent;
 }
 #nav.scrolled {
-  background: rgba(244, 240, 236, 0.82);
-  backdrop-filter: blur(14px) saturate(1.2);
+  background: rgba(244, 240, 236, 0.88);
+  backdrop-filter: blur(9px) saturate(1.15);
+  -webkit-backdrop-filter: blur(9px) saturate(1.15);
   border-bottom: 1px solid var(--hairline);
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -1679,6 +1681,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 (function () {
   'use strict';
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Preload below-the-fold imagery during the splash dwell ----
+     Decodes every section image up front so scrolling is decode-jank-free. */
+  ['img/about.jpg','img/spotlight.jpg','img/gal1.jpg','img/gal2.jpg','img/gal3.jpg',
+   'img/gal4.jpg','img/gal5.jpg','img/gal6.jpg','img/gal7.jpg'].forEach(function (src) {
+    var im = new Image();
+    im.src = src;
+    if (im.decode) { im.decode().catch(function () {}); }
+  });
 
   /* ---- B · Wrap the hero headline into per-word reveal spans ---- */
   var headline = document.getElementById('heroHeadline');
